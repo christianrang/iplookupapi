@@ -10,3 +10,8 @@ variable "iam_policy_arn" {
         "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
     ]
 }
+
+variable "virustotal_api_key" {
+    type        = string
+    description = "VirusTotal API Key"
+}
