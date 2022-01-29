@@ -1,5 +1,8 @@
 # Cleans local directory
 lclean: 
+	read -p "This will rm the bin and put directories. Press enter to continue or CTRL+C to cancel." tmp
+	rm -r bin/
+	rm -r outputs/
 
 # Compiles Go code locally
 compile:
@@ -23,7 +26,8 @@ destroy: lclean
 
 # Tests cloud deployment
 test:
+	mkdir outputs
 	curl "$$(terraform output -raw api_url)/ping"
-	curl "$$(terraform output -raw api_url)/ip/8.8.8.8" | jq
-	curl "$$(terraform output -raw api_url)/domain/google.com" | jq
-	curl "$$(terraform output -raw api_url)/file_hash/74768564ea2ac673e57e937f80c895c81d015e99a72544efa5a679d729c46d5f" | jq
+	curl "$$(terraform output -raw api_url)/ip/8.8.8.8" | jq >> outputs/ip.json
+	curl "$$(terraform output -raw api_url)/domain/google.com" | jq >> outputs/domain.json
+	curl "$$(terraform output -raw api_url)/file_hash/74768564ea2ac673e57e937f80c895c81d015e99a72544efa5a679d729c46d5f" | jq >> outputs/file_hash.json
