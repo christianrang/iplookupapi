@@ -81,6 +81,13 @@ func VtFileHashApiCall(hash string, out *map[string]interface{}) *http.Response 
 }
 
 func SearchIP(context *gin.Context) {
+	if !validateIP(context.Params.ByName("ip")) {
+		context.JSON(http.StatusNotAcceptable, gin.H{
+			"message": "Invalid IP address passed as argument",
+		})
+		return
+	}
+
 	ipResp := IPResponse{
 		Ip: context.Params.ByName("ip"),
 	}
