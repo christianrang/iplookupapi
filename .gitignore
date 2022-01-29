@@ -19,6 +19,7 @@ go.work
 
 bin/*
 notes/*
+outputs/*
 .env
   
 # Local .terraform directories
