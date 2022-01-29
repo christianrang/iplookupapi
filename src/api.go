@@ -118,8 +118,16 @@ func SearchDomain(context *gin.Context) {
 }
 
 func SearchFileHash(context *gin.Context) {
+	hash := context.Params.ByName("file_hash")
+
+	if !govalidator.IsHash(hash, "md5") && !govalidator.IsHash(hash, "sha1") && !govalidator.IsHash(hash, "sha256") {
+		context.JSON(http.StatusNotAcceptable, gin.H{
+			"message": "Invalid file hash provided",
+		})
+		return
+	}
 	resp := FileHashResponse{
-		FileHash: context.Params.ByName("file_hash"),
+		FileHash: hash,
 	}
 
 	VtFileHashApiCall(resp.FileHash, &resp.Virustotal)
