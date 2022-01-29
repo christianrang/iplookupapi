@@ -15,4 +15,7 @@ func LoadRoutes(r *gin.Engine) {
 	r.GET("/ip/:ip", func(context *gin.Context) {
 		SearchIP(context)
 	})
+	r.GET("/domain/:domain", func(context *gin.Context) {
+		SearchDomain(context)
+	})
 }

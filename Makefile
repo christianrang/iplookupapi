@@ -24,4 +24,5 @@ destroy: lclean
 # Tests cloud deployment
 test:
 	curl "$$(terraform output -raw api_url)/ping"
-	curl "$$(terraform output -raw api_url)/ip/8.8.8.8"
+	curl "$$(terraform output -raw api_url)/ip/8.8.8.8" | jq
+	curl "$$(terraform output -raw api_url)/domain/google.com" | jq

@@ -45,3 +45,15 @@ func TestSearchIPRoute(t *testing.T) {
 
 	assert.Equal(t, 200, w.Code)
 }
+
+func TestSearchDomainRoute(t *testing.T) {
+
+	r := gin.Default()
+	LoadRoutes(r)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/domain/google.com", nil)
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+}
