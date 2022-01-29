@@ -33,3 +33,15 @@ func TestPingRoute(t *testing.T) {
 	assert.Equal(t, 200, w.Code)
 	assert.Equal(t, "{\"message\":\"Pong!\"}", w.Body.String())
 }
+
+func TestSearchIPRoute(t *testing.T) {
+
+	r := gin.Default()
+	LoadRoutes(r)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/ip/8.8.8.8", nil)
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+}

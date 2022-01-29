@@ -12,5 +12,7 @@ func LoadRoutes(r *gin.Engine) {
 			"message": "Pong!",
 		})
 	})
-
+	r.GET("/ip/:ip", func(context *gin.Context) {
+		SearchIP(context)
+	})
 }

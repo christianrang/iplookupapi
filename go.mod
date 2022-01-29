@@ -3,10 +3,11 @@ module iplookup
 go 1.17
 
 require (
+	github.com/VirusTotal/vt-go v0.0.0-20211209151516-855a1e790678
 	github.com/aws/aws-lambda-go v1.28.0
 	github.com/awslabs/aws-lambda-go-api-proxy v0.12.0
 	github.com/gin-gonic/gin v1.7.7
-	github.com/stretchr/testify v1.6.1
+	github.com/stretchr/testify v1.7.0
 )
 
 require (
@@ -22,6 +23,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/thedevsaddam/gojsonq/v2 v2.5.2 // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
 	golang.org/x/sys v0.0.0-20210423082822-04245dca01da // indirect
