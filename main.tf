@@ -2,6 +2,17 @@ provider "aws" {
     region = "us-east-1"
 }
 
+    terraform {
+      backend "remote" {
+        organization = "gh-actions-iplookupapi"
+
+        # The name of the Terraform Cloud workspace to store Terraform state files in.
+        workspaces {
+          name = "gh-actions-iplookupapi"
+        }
+      }
+    }
+
 data "archive_file" "lambda_zip" {
     type        = "zip"
     source_file = "bin/lambda"
