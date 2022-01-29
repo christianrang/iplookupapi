@@ -9,18 +9,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// Tests server start
-// func TestAPIServerStart(t *testing.T) {
-
-// 	r := gin.Default()
-// 	LoadRoutes(r)
-// 	go func() {
-// 		if err := r.Run(); err != nil {
-// 			log.Printf("err starting the server %+v", err)
-// 		}
-// 	}()
-// }
-
 func TestPingRoute(t *testing.T) {
 
 	r := gin.Default()

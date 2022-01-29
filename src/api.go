@@ -30,19 +30,6 @@ type FileHashResponse struct {
 	Virustotal map[string]interface{} `json:"virustotal"`
 }
 
-// type IPInfo struct {
-// 	Ip       string `json:"ip"`
-// 	Hostname string `json:"hostname"`
-// 	City     string `json:"city"`
-// 	Region   string `json:"region"`
-// 	Country  string `json:"country"`
-// 	Loc      string `json:"loc"`
-// 	Org      string `json:"org"`
-// 	Postal   string `json:"postal"`
-// 	Timezone string `json:"timezone"`
-// 	Readme   string `json:"readme"`
-// }
-
 func APICall(url string, out *map[string]interface{}) *http.Response {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
