@@ -26,3 +26,4 @@ test:
 	curl "$$(terraform output -raw api_url)/ping"
 	curl "$$(terraform output -raw api_url)/ip/8.8.8.8" | jq
 	curl "$$(terraform output -raw api_url)/domain/google.com" | jq
+	curl "$$(terraform output -raw api_url)/file_hash/74768564ea2ac673e57e937f80c895c81d015e99a72544efa5a679d729c46d5f" | jq

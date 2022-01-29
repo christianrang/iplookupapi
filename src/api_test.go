@@ -32,3 +32,12 @@ func TesVtDomainApiCall(t *testing.T) {
 	res := VtDomainApiCall(resp.Domain, &resp.Virustotal)
 	assert.Equal(t, 200, res.StatusCode)
 }
+
+func TestVTFileHashApiCall(t *testing.T) {
+	resp := FileHashResponse{
+		FileHash: "74768564ea2ac673e57e937f80c895c81d015e99a72544efa5a679d729c46d5f",
+	}
+
+	res := VtDomainApiCall(resp.FileHash, &resp.Virustotal)
+	assert.Equal(t, 200, res.StatusCode)
+}

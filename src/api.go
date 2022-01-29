@@ -22,7 +22,12 @@ type IPResponse struct {
 
 type DomainResponse struct {
 	Domain     string                 `json:"domain"`
-	Virustotal map[string]interface{} `json:virustotal`
+	Virustotal map[string]interface{} `json:"virustotal"`
+}
+
+type FileHashResponse struct {
+	FileHash   string                 `json:"file_hash"`
+	Virustotal map[string]interface{} `json:"virustotal"`
 }
 
 // type IPInfo struct {
@@ -84,6 +89,10 @@ func VtDomainApiCall(domain string, out *map[string]interface{}) *http.Response 
 	return APICall(fmt.Sprintf("%s/domain/report?apikey=%s&domain=%s", vtUrl, vtApiKey, domain), out)
 }
 
+func VtFileHashApiCall(hash string, out *map[string]interface{}) *http.Response {
+	return APICall(fmt.Sprintf("%s/file/report?apikey=%s&resource=%s", vtUrl, vtApiKey, hash), out)
+}
+
 func SearchIP(context *gin.Context) {
 	ipResp := IPResponse{
 		Ip: context.Params.ByName("ip"),
@@ -105,4 +114,14 @@ func SearchDomain(context *gin.Context) {
 	VtDomainApiCall(dResp.Domain, &dResp.Virustotal)
 
 	context.JSON(http.StatusOK, dResp)
+}
+
+func SearchFileHash(context *gin.Context) {
+	resp := FileHashResponse{
+		FileHash: context.Params.ByName("file_hash"),
+	}
+
+	VtFileHashApiCall(resp.FileHash, &resp.Virustotal)
+
+	context.JSON(http.StatusOK, resp)
 }

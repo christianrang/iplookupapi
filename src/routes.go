@@ -18,4 +18,7 @@ func LoadRoutes(r *gin.Engine) {
 	r.GET("/domain/:domain", func(context *gin.Context) {
 		SearchDomain(context)
 	})
+	r.GET("/file_hash/:file_hash", func(context *gin.Context) {
+		SearchFileHash(context)
+	})
 }
