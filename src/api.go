@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 )
 
@@ -83,7 +84,7 @@ func VtFileHashApiCall(hash string, out *map[string]interface{}) *http.Response 
 func SearchIP(context *gin.Context) {
 	if !validateIP(context.Params.ByName("ip")) {
 		context.JSON(http.StatusNotAcceptable, gin.H{
-			"message": "Invalid IP address passed as argument",
+			"message": "Invalid IP provided",
 		})
 		return
 	}
@@ -100,6 +101,12 @@ func SearchIP(context *gin.Context) {
 }
 
 func SearchDomain(context *gin.Context) {
+	if !govalidator.IsDNSName(context.Params.ByName("domain")) {
+		context.JSON(http.StatusNotAcceptable, gin.H{
+			"message": "Invalid domain provided",
+		})
+		return
+	}
 	dResp := DomainResponse{
 		Domain: context.Params.ByName("domain"),
 	}

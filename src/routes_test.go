@@ -58,14 +58,36 @@ func TestSearchIPRoute(t *testing.T) {
 
 func TestSearchDomainRoute(t *testing.T) {
 
+	tests := []struct {
+		title    string
+		opt      string
+		expected int
+	}{
+		{
+			"Invalid Domain",
+			"a&*.com",
+			406,
+		},
+		{
+			"Valid Domain",
+			"google.com",
+			200,
+		},
+	}
+
 	r := gin.Default()
 	LoadRoutes(r)
 
-	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/search/domain/google.com", nil)
-	r.ServeHTTP(w, req)
+	for _, test := range tests {
+		t.Run(test.title, func(t *testing.T) {
+			w := httptest.NewRecorder()
+			req, _ := http.NewRequest("GET", fmt.Sprintf("/search/domain/%s", test.opt), nil)
+			r.ServeHTTP(w, req)
 
-	assert.Equal(t, 200, w.Code)
+			assert.Equal(t, test.expected, w.Code)
+		})
+	}
+
 }
 func TestSearchFileHashRoute(t *testing.T) {
 
