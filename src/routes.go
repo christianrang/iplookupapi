@@ -12,13 +12,10 @@ func LoadRoutes(r *gin.Engine) {
 			"message": "Pong!",
 		})
 	})
-	r.GET("/ip/:ip", func(context *gin.Context) {
-		SearchIP(context)
-	})
-	r.GET("/domain/:domain", func(context *gin.Context) {
-		SearchDomain(context)
-	})
-	r.GET("/file_hash/:file_hash", func(context *gin.Context) {
-		SearchFileHash(context)
-	})
+	searchRoutes := r.Group("/search")
+	{
+		searchRoutes.GET("/ip/:ip", SearchIP)
+		searchRoutes.GET("/domain/:domain", SearchDomain)
+		searchRoutes.GET("/file_hash/:file_hash", SearchFileHash)
+	}
 }
