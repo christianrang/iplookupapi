@@ -3,7 +3,7 @@
 ## API Routes
 
 |Route|Description|
-|:--:|:--:|
+|:--|:--:|
 |/search/ip/:ip|Searches IP address using VirusTotal and IPInfo.io APIs|
 |/search/domain/:domain|Searches Domain using VirusTotal API|
 |/search/file_hash/:file_hash|Searches file hash (md5, sha1, sha256) using VirusTotal API|
