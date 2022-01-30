@@ -16,6 +16,7 @@ func init() {
 	log.Printf("Powering on IPLookup API from cold start")
 	r := gin.Default()
 	LoadRoutes(r)
+	gin.SetMode(gin.ReleaseMode)
 
 	ginLambda = ginadapter.New(r)
 }
