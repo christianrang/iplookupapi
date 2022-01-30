@@ -71,14 +71,36 @@ func IPInfoAPICall(ip string, out *map[string]interface{}) *http.Response {
 	return APICall(fmt.Sprintf("https://ipinfo.io/%s", ip), out)
 }
 
+// This function is simply used for readability purposes. It can be removed to cut lines of code at the cost of readability.
+// To remove this line simply copy the everything after the return keyword and paste it whereever the function is called.
 func VtDomainApiCall(domain string, out *map[string]interface{}) *http.Response {
 	// Returning the response here is for review of the http.Response.StatusCode
-	// TODO: Consider only returning the http.Response.StatusCode if nothing else in http.Response if of use
 	return APICall(fmt.Sprintf("%s/domain/report?apikey=%s&domain=%s", vtUrl, vtApiKey, domain), out)
 }
 
+// This function is simply used for readability purposes. It can be removed to cut lines of code at the cost of readability.
+// To remove this line simply copy the everything after the return keyword and paste it whereever the function is called.
 func VtFileHashApiCall(hash string, out *map[string]interface{}) *http.Response {
 	return APICall(fmt.Sprintf("%s/file/report?apikey=%s&resource=%s", vtUrl, vtApiKey, hash), out)
+}
+
+func CheckVtStatusCode(code int, context *gin.Context) {
+	switch code {
+	case 204:
+		context.JSON(http.StatusNoContent, gin.H{
+			"message": "Our provider has limited our requests. Please try again later.",
+		})
+		break
+	case 400:
+		context.JSON(http.StatusNoContent, gin.H{
+			"message": "Our provider was unable to process this request",
+		})
+		break
+	default:
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Experienced an error trying to provide requested data",
+		})
+	}
 }
 
 func SearchIP(context *gin.Context) {
@@ -89,15 +111,19 @@ func SearchIP(context *gin.Context) {
 		return
 	}
 
-	ipResp := IPResponse{
+	msg := IPResponse{
 		Ip: context.Params.ByName("ip"),
 	}
 
-	// TODO: Implement handling for http.Response.StatusCode
-	VtIpApiCall(ipResp.Ip, &ipResp.Virustotal)
-	IPInfoAPICall(ipResp.Ip, &ipResp.IPInfo)
+	if resp := VtIpApiCall(msg.Ip, &msg.Virustotal); resp.StatusCode != 200 {
+		// CheckVtStatusCode will send a msg to the user forwarding the error encountered
+		CheckVtStatusCode(resp.StatusCode, context)
+		return
+	}
 
-	context.JSON(http.StatusOK, ipResp)
+	IPInfoAPICall(msg.Ip, &msg.IPInfo)
+
+	context.JSON(http.StatusOK, msg)
 }
 
 func SearchDomain(context *gin.Context) {
@@ -107,14 +133,17 @@ func SearchDomain(context *gin.Context) {
 		})
 		return
 	}
-	dResp := DomainResponse{
+	msg := DomainResponse{
 		Domain: context.Params.ByName("domain"),
 	}
 
-	// TODO: Implement handling for http.Response.StatusCode
-	VtDomainApiCall(dResp.Domain, &dResp.Virustotal)
+	if resp := VtDomainApiCall(msg.Domain, &msg.Virustotal); resp.StatusCode != 200 {
+		// CheckVtStatusCode will send a msg to the user forwarding the error encountered
+		CheckVtStatusCode(resp.StatusCode, context)
+		return
+	}
 
-	context.JSON(http.StatusOK, dResp)
+	context.JSON(http.StatusOK, msg)
 }
 
 func SearchFileHash(context *gin.Context) {
@@ -126,11 +155,15 @@ func SearchFileHash(context *gin.Context) {
 		})
 		return
 	}
-	resp := FileHashResponse{
+	msg := FileHashResponse{
 		FileHash: hash,
 	}
 
-	VtFileHashApiCall(resp.FileHash, &resp.Virustotal)
+	if resp := VtFileHashApiCall(msg.FileHash, &msg.Virustotal); resp.StatusCode != 200 {
+		// CheckVtStatusCode will send a msg to the user forwarding the error encountered
+		CheckVtStatusCode(resp.StatusCode, context)
+		return
+	}
 
-	context.JSON(http.StatusOK, resp)
+	context.JSON(http.StatusOK, msg)
 }
