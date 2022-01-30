@@ -31,7 +31,7 @@ type FileHashResponse struct {
 	Virustotal map[string]interface{} `json:"virustotal"`
 }
 
-func APICall(url string, out *map[string]interface{}) *http.Response {
+func OutboundAPICalltoJson(url string, out *map[string]interface{}) *http.Response {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Println(err)
@@ -61,29 +61,30 @@ func APICall(url string, out *map[string]interface{}) *http.Response {
 // This function is simply used for readability purposes. It can be removed to cut lines of code at the cost of readability.
 // To remove this line simply copy the everything after the return keyword and paste it whereever the function is called.
 func VtIpApiCall(ip string, out *map[string]interface{}) *http.Response {
-	return APICall(fmt.Sprintf("%s/ip-address/report?apikey=%s&ip=%s", vtUrl, vtApiKey, ip), out)
+	return OutboundAPICalltoJson(fmt.Sprintf("%s/ip-address/report?apikey=%s&ip=%s", vtUrl, vtApiKey, ip), out)
 }
 
 // This function is simply used for readability purposes. It can be removed to cut lines of code at the cost of readability.
 // To remove this line simply copy the everything after the return keyword and paste it whereever the function is called.
 func IPInfoAPICall(ip string, out *map[string]interface{}) *http.Response {
 	// Returning the response here is for review of the http.Response.StatusCode
-	return APICall(fmt.Sprintf("https://ipinfo.io/%s", ip), out)
+	return OutboundAPICalltoJson(fmt.Sprintf("https://ipinfo.io/%s", ip), out)
 }
 
 // This function is simply used for readability purposes. It can be removed to cut lines of code at the cost of readability.
 // To remove this line simply copy the everything after the return keyword and paste it whereever the function is called.
 func VtDomainApiCall(domain string, out *map[string]interface{}) *http.Response {
 	// Returning the response here is for review of the http.Response.StatusCode
-	return APICall(fmt.Sprintf("%s/domain/report?apikey=%s&domain=%s", vtUrl, vtApiKey, domain), out)
+	return OutboundAPICalltoJson(fmt.Sprintf("%s/domain/report?apikey=%s&domain=%s", vtUrl, vtApiKey, domain), out)
 }
 
 // This function is simply used for readability purposes. It can be removed to cut lines of code at the cost of readability.
 // To remove this line simply copy the everything after the return keyword and paste it whereever the function is called.
 func VtFileHashApiCall(hash string, out *map[string]interface{}) *http.Response {
-	return APICall(fmt.Sprintf("%s/file/report?apikey=%s&resource=%s", vtUrl, vtApiKey, hash), out)
+	return OutboundAPICalltoJson(fmt.Sprintf("%s/file/report?apikey=%s&resource=%s", vtUrl, vtApiKey, hash), out)
 }
 
+// Handles non 200 status codes from the virustotal api. Passing the necessary information to the end user.
 func CheckVtStatusCode(code int, context *gin.Context) {
 	switch code {
 	case 204:
