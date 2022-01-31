@@ -19,11 +19,13 @@ type IPResponse struct {
 	Ip         string                 `json:"ip"`
 	Virustotal map[string]interface{} `json:"virustotal"`
 	IPInfo     map[string]interface{} `json:"ipinfo"`
+	IPApi      map[string]interface{} `json:"ip-api"`
 }
 
 type DomainResponse struct {
 	Domain     string                 `json:"domain"`
 	Virustotal map[string]interface{} `json:"virustotal"`
+	IPApi      map[string]interface{} `json:"ip-api"`
 }
 
 type FileHashResponse struct {
@@ -84,6 +86,12 @@ func VtFileHashApiCall(hash string, out *map[string]interface{}) *http.Response 
 	return OutboundAPICalltoJson(fmt.Sprintf("%s/file/report?apikey=%s&resource=%s", vtUrl, vtApiKey, hash), out)
 }
 
+// This function is simply used for readability purposes. It can be removed to cut lines of code at the cost of readability.
+// To remove this line simply copy the everything after the return keyword and paste it whereever the function is called.
+func IPApiApiCall(ipOrDomain string, out *map[string]interface{}) *http.Response {
+	return OutboundAPICalltoJson(fmt.Sprintf("http://ip-api.com/json/%s?fields=66846719", ipOrDomain), out)
+}
+
 // Handles non 200 status codes from the virustotal api. Passing the necessary information to the end user.
 func CheckVtStatusCode(code int, context *gin.Context) {
 	switch code {
@@ -123,6 +131,7 @@ func SearchIP(context *gin.Context) {
 	}
 
 	IPInfoAPICall(msg.Ip, &msg.IPInfo)
+	IPApiApiCall(msg.Ip, &msg.IPApi)
 
 	context.JSON(http.StatusOK, msg)
 }
@@ -143,6 +152,8 @@ func SearchDomain(context *gin.Context) {
 		CheckVtStatusCode(resp.StatusCode, context)
 		return
 	}
+
+	IPApiApiCall(msg.Domain, &msg.IPApi)
 
 	context.JSON(http.StatusOK, msg)
 }
