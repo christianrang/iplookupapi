@@ -124,14 +124,16 @@ func SearchIP(context *gin.Context) {
 		Ip: context.Params.ByName("ip"),
 	}
 
-	if resp := VtIpApiCall(msg.Ip, &msg.Virustotal); resp.StatusCode != 200 {
-		// CheckVtStatusCode will send a msg to the user forwarding the error encountered
-		CheckVtStatusCode(resp.StatusCode, context)
-		return
-	}
+	go func() {
+		if resp := VtIpApiCall(msg.Ip, &msg.Virustotal); resp.StatusCode != 200 {
+			// CheckVtStatusCode will send a msg to the user forwarding the error encountered
+			CheckVtStatusCode(resp.StatusCode, context)
+			return
+		}
+	}()
 
-	IPInfoAPICall(msg.Ip, &msg.IPInfo)
-	IPApiApiCall(msg.Ip, &msg.IPApi)
+	go IPInfoAPICall(msg.Ip, &msg.IPInfo)
+	go IPApiApiCall(msg.Ip, &msg.IPApi)
 
 	context.JSON(http.StatusOK, msg)
 }
