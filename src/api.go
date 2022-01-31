@@ -130,6 +130,7 @@ func SearchIP(context *gin.Context) {
 	wg.Add(3)
 
 	go func() {
+		defer wg.Done()
 		if resp := VtIpApiCall(msg.Ip, &msg.Virustotal); resp.StatusCode != 200 {
 			// CheckVtStatusCode will send a msg to the user forwarding the error encountered
 			CheckVtStatusCode(resp.StatusCode, context)
@@ -137,8 +138,15 @@ func SearchIP(context *gin.Context) {
 		}
 	}()
 
-	go IPInfoAPICall(msg.Ip, &msg.IPInfo)
-	go IPApiApiCall(msg.Ip, &msg.IPApi)
+	go func() {
+		defer wg.Done()
+		IPInfoAPICall(msg.Ip, &msg.IPInfo)
+	}()
+
+	go func() {
+		defer wg.Done()
+		go IPApiApiCall(msg.Ip, &msg.IPApi)
+	}()
 
 	wg.Wait()
 
